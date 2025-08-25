@@ -1,6 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const bcrypt = require('bcryptjs');
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
+import bcrypt from 'bcryptjs';
 
 const Student = sequelize.define('Student', {
    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },  
@@ -23,9 +23,9 @@ const Student = sequelize.define('Student', {
   
   password: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     validate: {
-      len: [8, 100],
+      len: [6, 100],
     },
   },
   
@@ -38,15 +38,34 @@ const Student = sequelize.define('Student', {
       max: new Date().getFullYear() + 1, // Allowing next year's batch
     },
   },
-  
-  
-  
-  
+  tp_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: TrainingPartner,
+      key: 'tp_id'
+    }
+  },
+  contact_info: {
+    allowNull: true,
+    type: DataTypes.STRING(13),
+    unique: true
+  },
+
+
+
 },{
    tableName :'Student'
    ,timestamps: true
 
 });
 
+// Hash password before saving
+Student.beforeCreate(async (student) => {
+  if (student.password) {
+    const salt = await bcrypt.genSalt(10);
+    student.password = await bcrypt.hash(student.password, salt);
+  }
+});
 
-module.exports = Student;
+export default Student;
