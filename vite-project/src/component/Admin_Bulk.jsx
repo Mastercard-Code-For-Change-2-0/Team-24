@@ -41,8 +41,12 @@ function AdminDashboard() {
       });
       const data = await res.json();
       setMessage(data.message || "Bulk upload successful");
+      setBulkFile(null);
+      // Clear message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
     } catch {
       setMessage("Bulk upload failed");
+      setTimeout(() => setMessage(""), 3000);
     }
   };
 
@@ -85,6 +89,7 @@ function AdminDashboard() {
               accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
               onChange={e => setBulkFile(e.target.files[0])}
               className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              key={bulkFile ? bulkFile.name : ''}
             />
             <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold shadow transition-colors">
               Upload
