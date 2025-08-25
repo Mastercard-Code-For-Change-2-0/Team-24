@@ -23,6 +23,8 @@ router.post('/students/register', (req, res, next) => {
     next();
 }, register);
 
+router.post('/students/login', login);
+
 router.post('/clerk/register', verifyToken, requireRole(['admin']), (req, res, next) => {
     req.body.role = 'clerk';
     next();

@@ -128,6 +128,59 @@ Authorization: Bearer <token>
 }
 ```
 
+## Bulk Upload Students (Admin Only)
+
+```http
+POST /api/students/bulk
+```
+
+**Headers:**
+```
+Authorization: Bearer <admin_token>
+Content-Type: multipart/form-data
+```
+
+**Input:**
+- Form data with key 'file' containing either:
+  1. A CSV file, or
+  2. An Excel file (.xlsx)
+
+**File Format:**
+1. CSV format:
+```csv
+name,email,password,batch
+John Doe,john@example.com,password123,2023
+Jane Doe,jane@example.com,password123,2023
+```
+
+2. Excel format:
+- First row should contain column headers: name, email, password, batch
+- Subsequent rows should contain student data
+- Sheet name doesn't matter, first sheet will be used
+
+**Success Response:**
+```json
+{
+    "message": "Students created successfully",
+    "created": 2,
+    "failed": 0,
+    "students": [
+        {
+            "id": "uuid1",
+            "name": "John Doe",
+            "email": "john@example.com",
+            "batch": 2023
+        },
+        {
+            "id": "uuid2",
+            "name": "Jane Doe",
+            "email": "jane@example.com",
+            "batch": 2023
+        }
+    ]
+}
+```
+
 ## Notes
 1. Registration only requires essential fields (name, email, password, batch)
 2. Additional profile information can be updated after registration through the profile update endpoint

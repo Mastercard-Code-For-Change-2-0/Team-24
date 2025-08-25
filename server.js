@@ -5,11 +5,14 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { mkdirSync } from 'fs';
 import userRouter from "./routes/userRoutes.js";
+import authRouter from "./routes/authroutes.js";
 import sequelize from "./config/database.js";
 import Student from "./models/student.js";
+import adminRouter from "./routes/adminroutes.js";
 
 const app = express();
 dotenv.config();
+
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
@@ -17,17 +20,22 @@ app.use(cookieParser());
 // CORS configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
-  : ["http://localhost:5173", "http://localhost:3000"];
+  : ["http://localhost:5173"];
 
 const corsOptions = {
   origin: allowedOrigins,
-  credentials: true, // Allow credentials (cookies)
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   exposedHeaders: ["set-cookie"],
 };
 
 app.use(cors(corsOptions));
+
+// Mount routes
+app.use('/api', authRouter);
+app.use('/api', userRouter);
+app.use('/api/admin', adminRouter);
 
 // Create uploads directory if it doesn't exist
 try {
@@ -40,9 +48,6 @@ try {
 app.get("/", (req, res) => {
     res.send("🚀 App API is running...");
 });
-
-// API routes (mount once)
-app.use('/api', userRouter);
 
 // Initialize database function
 async function initDb() {

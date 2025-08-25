@@ -25,10 +25,16 @@ const storage = multer.diskStorage({
 const upload = multer({ 
     storage: storage,
     fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'text/csv') {
+        // Accept both CSV and Excel files
+        const allowedMimes = [
+            'text/csv',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+            'application/vnd.ms-excel' // .xls
+        ];
+        if (allowedMimes.includes(file.mimetype)) {
             cb(null, true);
         } else {
-            cb(new Error('Only CSV files are allowed'));
+            cb(new Error('Only CSV and Excel files are allowed'));
         }
     }
 });
@@ -83,6 +89,14 @@ router.get('/users', requireRoles(['admin']), async (req, res) => {
         res.status(500).json({ message: "Error fetching users" });
     }
 });
+
+// Bulk upload students route (admin only)
+router.post('/students/bulk', 
+    verifyToken, 
+    requireRoles(['admin']),
+    upload.single('file'),
+    bulkCreateStudents
+);
 
 // Update user profile - available to all authenticated users
 router.put('/profile', async (req, res) => {
