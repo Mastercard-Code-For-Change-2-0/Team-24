@@ -1,17 +1,36 @@
-import { useState } from 'react';
-import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
-import useLogin from '../hooks/useLogin'; 
-export default function LoginPage() {
-    const {user,login,loading} = useLogin();
+import React, { useState} from 'react';
+import { User, Mail, Lock, Phone, Building, GraduationCap, Users, Eye, EyeOff } from 'lucide-react';
+import useLogin from "../hooks/useLogin";
+import { NavLink, useNavigate } from 'react-router-dom';
 
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+const RoleBasedSignup = () => {
+    const navigate = useNavigate();
+    const {login,loading,newUser,error} = useLogin();
+  const [formData, setFormData] = useState({
+    role:'',
+    email: '',
+    password: '',
+  });
+
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const roles = [
+    {
+      id: 'student',
+      name: 'Student',
+    },
+    {
+      id: 'admin',
+      name: 'Admin',
+    },
+    {
+      id: 'clerk',
+      name: 'Clerk',
+      },
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,7 +38,6 @@ export default function LoginPage() {
       ...prev,
       [name]: value
     }));
-    
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -29,171 +47,182 @@ export default function LoginPage() {
     }
   };
 
+  const handleRoleSelect = (roleId) => {
+    setFormData(prev => ({
+      ...prev,
+      role: roleId,      
+    }));
+    // Clear role error
+    if (errors.role) {
+      setErrors(prev => ({
+        ...prev,
+        role: ''
+      }));
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
-    // Email validation
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-
-    // Password validation
+    // Basic validation
+    // if (!formData.name.trim()) newErrors.name = 'First name is required';
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (formData.password.length < 5) {
+      newErrors.password = 'Password must be at least 8 characters';
     }
+    if (!formData.role) {
+      newErrors.role = 'Please select a role';
+    }
+
+    // Role-specific validation
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async () => {
-    
-    if (!validateForm()) {
-      return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    setIsSubmitting(true);
+    const result = await login(formData.role, formData.email, formData.password);
+    setIsSubmitting(false);
+    if(!result){
+      // alert("Sign in successful");
+      setFormData({
+        role:"",
+        email: "",
+        password: "",
+      });
+      // Role-based navigation
+      if(formData.role === "admin") {
+        navigate("/admin/profile");
+      } else if(formData.role === "student") {
+        navigate("/student/profile");
+      } else if(formData.role === "clerk") {
+        navigate("/clerk/dashboard");
+      } else {
+        navigate("/");
+      }
     }
-    const res = await login(formData.email,formData.password);
-    if(res){
-        console.log("Login successful",user);
+    else{
+      alert(error || "Login failed");
+      console.log(error);
     }
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4">
-            <User className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your account</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white text-center">
+          <h1 className="text-3xl font-bold mb-2">Login to Your Account</h1>
+          <p className="text-blue-100">Impactful stories, one step at a time</p>
         </div>
-
-        {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          <div className="space-y-6">
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
-                    errors.email 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
-                  }`}
-                  placeholder="Enter your email"
-                />
-              </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
+        
+        <form onSubmit={handleSubmit} className="p-8">
+          {/* Role Selection */}
+          <div className="mb-8">
+            <label className="block text-sm font-medium text-gray-700 mb-4">
+              Select Your Role *
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {roles.map((role) => {
+                // const IconComponent = role.icon;
+                return (
+                  <button
+                    key={role.id}
+                    type="button"
+                    onClick={() => handleRoleSelect(role.id)}
+                    className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                      formData.role === role.id
+                        ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-500 ring-opacity-20'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    {/* <IconComponent className={`w-8 h-8 mx-auto mb-2 ${
+                      formData.role === role.id ? 'text-blue-600' : 'text-gray-400'
+                    }`} /> */}
+                    <h3 className={`font-semibold ${
+                      formData.role === role.id ? 'text-blue-900' : 'text-gray-900'
+                    }`}>
+                      {role.name}
+                    </h3>
+                    {/* <p className="text-sm text-gray-600 mt-1">{role.description}</p> */}
+                  </button>
+                );
+              })}
             </div>
+            {errors.role && <p className="text-red-500 text-sm mt-2">{errors.role}</p>}
+          </div>
 
-            {/* Password Field */}
+          {/* Basic Information */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address *
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Enter your email address"
+              />
+            </div>
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password *
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
-                    errors.password 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
+                  className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="Enter your password"
+                  placeholder="Enter password"
                 />
                 <button
                   type="button"
-                  onClick={togglePasswordVisibility}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-              )}
+              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>
-
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                />
-                <span className="ml-2 text-sm text-gray-600">Remember me</span>
-              </label>
-              <button
-                type="button"
-                className="text-sm text-indigo-600 hover:text-indigo-500 font-medium"
-              >
-                Forgot password?
-              </button>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={isLoading}
-              className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Signing in...
-                </div>
-              ) : (
-                'Sign In'
-              )}
-            </button>
           </div>
 
-          {/* Footer */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <button className="text-indigo-600 hover:text-indigo-500 font-medium">
-                Sign up
-              </button>
-            </p>
-          </div>
-        </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Logging into Account...' : 'Log Into Account'}
+          </button>
 
+          <p className="text-center text-sm text-gray-600 mt-6">
+           Don't have an account?{' '}
+            <a onClick={()=>{navigate('/login/'+formData.role)}} className="text-blue-600 hover:text-blue-700 font-medium">
+              Sign in here
+            </a>
+          </p>
+        </form>
       </div>
     </div>
   );
-}
+};
+
+export default RoleBasedSignup;
