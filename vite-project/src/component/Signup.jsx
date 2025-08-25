@@ -28,17 +28,11 @@ const RoleBasedSignup = () => {
       description: 'Access educational resources and student features'
     },
     {
-      id: 'professional',
-      name: 'Professional',
+      id: 'admin',
+      name: 'Admin',
       icon: Building,
       description: 'Business tools and professional networking'
     },
-    {
-      id: 'instructor',
-      name: 'Instructor',
-      icon: Users,
-      description: 'Create and manage courses and content'
-    }
   ];
 
   const handleInputChange = (e) => {
@@ -96,18 +90,11 @@ const RoleBasedSignup = () => {
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    
     if (!formData.role) {
       newErrors.role = 'Please select a role';
     }
 
     // Role-specific validation
-    if (formData.role === 'professional') {
-      if (!formData.companyName.trim()) newErrors.companyName = 'Company name is required';
-      if (!formData.jobTitle.trim()) newErrors.jobTitle = 'Job title is required';
-    } else if (formData.role === 'student') {
-      if (!formData.studentId.trim()) newErrors.studentId = 'Batch is required';
-    } 
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
