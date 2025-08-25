@@ -24,15 +24,15 @@ const RoleBasedSignup = () => {
     {
       id: 'student',
       name: 'Student',
-      icon: GraduationCap,
-      description: 'Access educational resources and student features'
     },
     {
       id: 'admin',
       name: 'Admin',
-      icon: Building,
-      description: 'Business tools and professional networking'
     },
+    {
+      id: 'clerk',
+      name: 'Clerk',
+      },
   ];
 
   const handleInputChange = (e) => {
@@ -180,7 +180,7 @@ const RoleBasedSignup = () => {
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   errors.studentId ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="Enter your student ID"
+                placeholder="Enter your batch"
               />
               {errors.batch && <p className="text-red-500 text-sm mt-1">{errors.batch}</p>}
             </div>
@@ -197,7 +197,7 @@ const RoleBasedSignup = () => {
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white text-center">
           <h1 className="text-3xl font-bold mb-2">Create Your Account</h1>
-          <p className="text-blue-100">Join our community and get started today</p>
+          <p className="text-blue-100">Impactful stories, one step at a time</p>
         </div>
         
         <form onSubmit={handleSubmit} className="p-8">
@@ -239,24 +239,24 @@ const RoleBasedSignup = () => {
           {/* Basic Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
                 Name *
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
-                  type="text"
+                  type="name"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     errors.name ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="Enter your first name"
-                />
-              </div>
+                  placeholder="Enter your name"
+                /> 
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
+          </div>
           </div>
 
           <div className="mb-6">
