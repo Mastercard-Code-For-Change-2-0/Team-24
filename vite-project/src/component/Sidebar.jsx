@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { 
-  Home, 
-  User, 
-  Settings, 
-  Menu, 
-  X, 
+import {
+  Home,
+  User,
+  Settings,
+  Menu,
+  X,
   ChevronLeft,
   LayoutDashboard,
   FileText,
   Bell,
-  LogOut
+  LogOut,
+  BarChart3
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
@@ -22,6 +23,7 @@ const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
   { id: 'home', label: 'Home', icon: <Home size={20} />, path: '/home' },
   { id: 'profile', label: 'Profile', icon: <User size={20} />, path: '/profile' },
+  { id: 'analytics', label: 'Analytics', icon: <BarChart3 size={20} />, path: '/analytics' },
   { id: 'documents', label: 'Documents', icon: <FileText size={20} />, path: '/documents' },
   { id: 'notifications', label: 'Notifications', icon: <Bell size={20} />, path: '/notifications' },
   { id: 'settings', label: 'Settings', icon: <Settings size={20} />, path: '/settings' },
