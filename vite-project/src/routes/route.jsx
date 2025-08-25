@@ -5,6 +5,7 @@ import LoginAdmin from "../component/Login-admin";
 // import Student from "../component/Student";
 import StudentLayout from "./StudentLayout";
 import Student_Profile from "../component/Student_Profile"; 
+import AdminDashboard from "../component/AdminDashboard";
 const router = createBrowserRouter([
     {
         path : '/',element:<RoleBasedSignup/>
@@ -25,6 +26,12 @@ const router = createBrowserRouter([
                 { path: "notifications", element: <div>Notifications</div> },
                 { path: "settings", element: <div>Settings</div> },
         ]   
+    },
+    {
+        path:"/admin",
+        children:[
+                { path: "dash", element: <AdminDashboard/>}
+        ]    
     }
 ])
 export default router;
