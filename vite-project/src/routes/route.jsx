@@ -6,6 +6,7 @@ import LoginAdmin from "../component/Login-admin";
 import StudentLayout from "./StudentLayout";
 import Student_Profile from "../component/Student_Profile"; 
 import AdminDashboard from "../component/AdminDashboard";
+import Admin_Bulk from "../component/Admin_Bulk";
 const router = createBrowserRouter([
     {
         path : '/',element:<RoleBasedSignup/>
@@ -30,7 +31,9 @@ const router = createBrowserRouter([
     {
         path:"/admin",
         children:[
-                { path: "dash", element: <AdminDashboard/>}
+                { path: "dash", element: <AdminDashboard/>},
+                {path:"bulk",element:<Admin_Bulk/>},
+
         ]    
     }
 ])
