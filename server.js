@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 
 
 require("dotenv").config();
@@ -10,8 +11,24 @@ const http = require("http"); // Make sure this is here
 const sequelize = require("./config/database.js");
 const Student = require("./models/student");
 const studentroutes = require("./routes/authroutes.js");
-const app = express();
+=======
+import dotenv from "dotenv";
+// const express = require("express");
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+// const cookieParser = require("cookie-parser");
+// const cors = require("cors");
+import { studentauthRouter } from "./routes/studentroutes.js";
 
+// const sequelize = require("./config/database.js");
+import sequelize from "./config/database.js";
+// const Student = require("./models/student");
+import Student from "./models/student.js";  // now works because we will create models/index.js
+
+>>>>>>> d355d8034487568945b084390a0e52d345dac5db
+const app = express();
+dotenv.config();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
@@ -21,6 +38,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
   : ["http://localhost:5173", "http://localhost:3000"];
 
+<<<<<<< HEAD
 app.use(
   cors({
     origin: allowedOrigins,
@@ -30,6 +48,23 @@ app.use(
     exposedHeaders: ["set-cookie"],
   })
 );
+=======
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true, // Allow credentials (cookies)
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  exposedHeaders: ["set-cookie"],
+};
+
+app.use(cors(corsOptions));
+app.use("/api/students", studentauthRouter);
+
+// Initial DB sync
+(async () => {
+  await Student.sync();
+})();
+>>>>>>> d355d8034487568945b084390a0e52d345dac5db
 
 // Routes
 app.get("/", (req, res) => {
@@ -49,10 +84,16 @@ sequelize
   .sync({ alter: true }) // auto-create/update tables
   .then(() => {
     console.log("✅ Database connected & synced");
+<<<<<<< HEAD
     server.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}`);
+=======
+    app.listen(PORT, () => {
+      console.log(`Server running at http://localhost:${PORT}`);
+>>>>>>> d355d8034487568945b084390a0e52d345dac5db
     });
   })
   .catch((err) => {
-    console.error("❌ Failed to connect DB:", err);
+    console.error("❌ Failed to connect DB:", err.message);
+    console.error(err.stack);
   });

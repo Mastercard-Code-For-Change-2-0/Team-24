@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import {z} from "zod";
 import jwt from 'jsonwebtoken';
-import {Students} from "../models/student.js";
+import {} from "../models/student.js";
 
 const loginSchema = z.object({
     email: z.email(),
