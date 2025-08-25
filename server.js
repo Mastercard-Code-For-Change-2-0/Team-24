@@ -1,17 +1,11 @@
 
 import dotenv from "dotenv";
-// const express = require("express");
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-// const cookieParser = require("cookie-parser");
-// const cors = require("cors");
-import { studentauthRouter } from "./routes/studentroutes.js";
-
-// const sequelize = require("./config/database.js");
+import userRouter from "./routes/userRoutes.js";
 import sequelize from "./config/database.js";
-// const Student = require("./models/student");
-import Student from "./models/student.js";  // now works because we will create models/index.js
+import Student from "./models/student.js";
 
 const app = express();
 dotenv.config();
@@ -33,11 +27,30 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use("/api/students", studentauthRouter);
+// API routes
+app.use("/api", userRouter);
 
-// Initial DB sync
+// Initial DB sync with force:true in development
 (async () => {
-  await Student.sync();
+  try {
+    await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
+    console.log('✅ Database synced successfully');
+    
+    // Create admin user if it doesn't exist
+    const adminExists = await Student.findOne({ where: { role: 'admin' } });
+    if (!adminExists && process.env.NODE_ENV === 'development') {
+      await Student.create({
+        name: 'Admin User',
+        email: 'admin@admin.com',
+        password: 'admin123',
+        batch: 2023,
+        role: 'admin'
+      });
+      console.log('✅ Admin user created');
+    }
+  } catch (error) {
+    console.error('❌ Error syncing database:', error);
+  }
 })();
 
 // Routes

@@ -1,10 +1,13 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 import bcrypt from 'bcryptjs';
-import TrainingPartner from './trainingparter.js';
 
 const Student = sequelize.define('Student', {
-   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },  
+  id: { 
+    type: DataTypes.INTEGER, 
+    autoIncrement: true, 
+    primaryKey: true 
+  },  
   name: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -20,8 +23,6 @@ const Student = sequelize.define('Student', {
       isEmail: true,
     },
   },
- 
-  
   password: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -29,14 +30,13 @@ const Student = sequelize.define('Student', {
       len: [6, 100],
     },
   },
-  
   batch: {
     type: DataTypes.INTEGER,
     allowNull: false,
     validate: {
       isInt: true,
-      min: 2000, // Assuming batch year won't be before 2000
-      max: new Date().getFullYear() + 1, // Allowing next year's batch
+      min: 2000,
+      max: new Date().getFullYear() + 1,
     },
   },
   role: {
@@ -44,26 +44,33 @@ const Student = sequelize.define('Student', {
     defaultValue: 'student',
     allowNull: false
   },
-  tp_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: TrainingPartner,
-      key: 'tp_id'
-    }
-  },
-  contact_info: {
-    allowNull: true,
+  // Additional fields that can be updated later in dashboard
+  contact: {
     type: DataTypes.STRING(13),
+    allowNull: true,
     unique: true
   },
-
-
-
-},{
-   tableName :'Student'
-   ,timestamps: true
-
+  address: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  profile_picture: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  skills: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: []
+  },
+  education: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: []
+  }
+}, {
+  tableName: 'students',
+  timestamps: true
 });
 
 // Hash password before saving
