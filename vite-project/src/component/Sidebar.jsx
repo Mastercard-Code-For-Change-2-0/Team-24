@@ -50,7 +50,7 @@ const Sidebar = ({ className = "" }) => {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full bg-white shadow-lg z-50 transition-all duration-300 ease-in-out
+          fixed top-0 left-0 h-screen bg-white shadow-lg z-50 transition-all duration-300 ease-in-out flex flex-col
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           ${isCollapsed ? 'w-16' : 'w-64'}
           lg:translate-x-0 lg:static lg:z-auto
@@ -58,7 +58,7 @@ const Sidebar = ({ className = "" }) => {
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b flex-shrink-0">
           {!isCollapsed && (
             <h2 className="text-xl font-bold text-gray-800">Dashboard</h2>
           )}
@@ -74,7 +74,7 @@ const Sidebar = ({ className = "" }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4">
+        <nav className="flex-1 p-4 overflow-y-auto">
           <ul className="space-y-2">
             {navItems.map((item) => (
               <li key={item.id}>
@@ -101,7 +101,7 @@ const Sidebar = ({ className = "" }) => {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t">
+        <div className="p-4 border-t flex-shrink-0">
           <button
             className={`
               w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
@@ -116,9 +116,42 @@ const Sidebar = ({ className = "" }) => {
         </div>
       </aside>
 
-      
+      {/* Main content area */}
+      <div className={`
+        flex-1 transition-all duration-300 ease-in-out
+        ${isCollapsed ? 'lg:ml-16' : 'lg:ml-64'}
+      `}>
+        <div className="p-8 ml-16 lg:ml-0">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">
+              {navItems.find(item => item.id === activeItem)?.label || 'Dashboard'}
+            </h1>
+            
+            <div className="bg-white rounded-lg shadow p-6">
+              <p className="text-gray-600 mb-4">
+                Welcome to the {navItems.find(item => item.id === activeItem)?.label} section.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="h-24 bg-gray-200 rounded-md mb-3"></div>
+                    <h3 className="font-semibold text-gray-900">Content Card {i + 1}</h3>
+                    <p className="text-sm text-gray-600 mt-1">Sample content description</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
 
-export default Sidebar;
+export default function App() {
+  return (
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+    </div>
+  );
+}
