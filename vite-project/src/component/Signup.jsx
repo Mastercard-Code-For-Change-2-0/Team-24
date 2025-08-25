@@ -7,20 +7,12 @@ const RoleBasedSignup = () => {
     const navigate = useNavigate();
     const {signup,loading,newUser,error} = useSignup();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
-    phone: '',
     role: '',
-    // Role-specific fields
-    companyName: '',
-    jobTitle: '',
-    studentId: '',
-    university: '',
-    department: '',
-    specialization: ''
+    batch: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -89,7 +81,7 @@ const RoleBasedSignup = () => {
     const newErrors = {};
 
     // Basic validation
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.name.trim()) newErrors.name = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
@@ -104,9 +96,7 @@ const RoleBasedSignup = () => {
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    }
+    
     if (!formData.role) {
       newErrors.role = 'Please select a role';
     }
@@ -116,12 +106,8 @@ const RoleBasedSignup = () => {
       if (!formData.companyName.trim()) newErrors.companyName = 'Company name is required';
       if (!formData.jobTitle.trim()) newErrors.jobTitle = 'Job title is required';
     } else if (formData.role === 'student') {
-      if (!formData.studentId.trim()) newErrors.studentId = 'Student ID is required';
-      if (!formData.university.trim()) newErrors.university = 'University is required';
-    } else if (formData.role === 'instructor') {
-      if (!formData.department.trim()) newErrors.department = 'Department is required';
-      if (!formData.specialization.trim()) newErrors.specialization = 'Specialization is required';
-    }
+      if (!formData.studentId.trim()) newErrors.studentId = 'Batch is required';
+    } 
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -137,19 +123,16 @@ const RoleBasedSignup = () => {
         alert("Account created");
         console.log("Success",newUser);
          setFormData({
-        firstName: "",
-        lastName: "",
+        name: "",
+        
         email: "",
         password: "",
         confirmPassword: "",
-        phone: "",
         role: "",
         companyName: "",
         jobTitle: "",
-        studentId: "",
-        university: "",
-        department: "",
-        specialization: "",
+        batch: "",
+        
       });
     }
     else{
@@ -219,66 +202,9 @@ const RoleBasedSignup = () => {
               />
               {errors.studentId && <p className="text-red-500 text-sm mt-1">{errors.studentId}</p>}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                University *
-              </label>
-              <div className="relative">
-                <GraduationCap className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  name="university"
-                  value={formData.university}
-                  onChange={handleInputChange}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.university ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter your university name"
-                />
-              </div>
-              {errors.university && <p className="text-red-500 text-sm mt-1">{errors.university}</p>}
             </div>
-          </div>
         );
-      
-      case 'instructor':
-        return (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Department *
-              </label>
-              <input
-                type="text"
-                name="department"
-                value={formData.department}
-                onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.department ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="Enter your department"
-              />
-              {errors.department && <p className="text-red-500 text-sm mt-1">{errors.department}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Specialization *
-              </label>
-              <input
-                type="text"
-                name="specialization"
-                value={formData.specialization}
-                onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.specialization ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="Enter your specialization"
-              />
-              {errors.specialization && <p className="text-red-500 text-sm mt-1">{errors.specialization}</p>}
-            </div>
-          </div>
-        );
-      
+
       default:
         return null;
     }
@@ -332,42 +258,22 @@ const RoleBasedSignup = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                First Name *
+                Name *
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
                   className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.firstName ? 'border-red-500' : 'border-gray-300'
+                    errors.name ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter your first name"
                 />
               </div>
-              {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name *
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.lastName ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter your last name"
-                />
-              </div>
-              {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+              {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
           </div>
 
@@ -470,9 +376,7 @@ const RoleBasedSignup = () => {
           {/* Role-specific fields */}
           {formData.role && (
             <div className="mb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Additional Information
-              </h3>
+
               {renderRoleSpecificFields()}
             </div>
           )}
