@@ -4,6 +4,7 @@ import LoginPage from "../component/Login";
 import LoginAdmin from "../component/Login-admin";
 // import Student from "../component/Student";
 import StudentLayout from "./StudentLayout";
+import Student_Profile from "../component/Student_Profile"; 
 const router = createBrowserRouter([
     {
         path : '/',element:<RoleBasedSignup/>
@@ -17,9 +18,9 @@ const router = createBrowserRouter([
     },
     {
         path:"/student",element: <StudentLayout />,
-        // children:[
-        //     {index:true,element:<Student/>}
-        // ]   
+        children:[
+            {index:true,element:<Student_Profile/>},
+        ]   
     }
 ])
 export default router;
