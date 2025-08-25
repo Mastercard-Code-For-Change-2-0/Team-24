@@ -76,7 +76,6 @@ const RoleBasedSignup = () => {
 
     // Basic validation
     if (!formData.name.trim()) newErrors.name = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -104,20 +103,16 @@ const RoleBasedSignup = () => {
     e.preventDefault();
     
     if (!validateForm()) return;
-
     const result = await signup(formData);
     if(result){
         alert("Account created");
         console.log("Success",newUser);
          setFormData({
         name: "",
-        
         email: "",
         password: "",
         confirmPassword: "",
         role: "",
-        companyName: "",
-        jobTitle: "",
         batch: "",
         
       });
@@ -175,19 +170,19 @@ const RoleBasedSignup = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Student ID *
+                Batch *
               </label>
               <input
                 type="text"
-                name="studentId"
-                value={formData.studentId}
+                name="batch"
+                value={formData.batch}
                 onChange={handleInputChange}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   errors.studentId ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Enter your student ID"
               />
-              {errors.studentId && <p className="text-red-500 text-sm mt-1">{errors.studentId}</p>}
+              {errors.batch && <p className="text-red-500 text-sm mt-1">{errors.batch}</p>}
             </div>
             </div>
         );
