@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 import bcrypt from 'bcryptjs';
+import TrainingPartner from './trainingparter.js';
 
 const Student = sequelize.define('Student', {
    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },  
@@ -37,6 +38,11 @@ const Student = sequelize.define('Student', {
       min: 2000, // Assuming batch year won't be before 2000
       max: new Date().getFullYear() + 1, // Allowing next year's batch
     },
+  },
+  role: {
+    type: DataTypes.ENUM('student', 'clerk', 'admin'),
+    defaultValue: 'student',
+    allowNull: false
   },
   tp_id: {
     type: DataTypes.INTEGER,
