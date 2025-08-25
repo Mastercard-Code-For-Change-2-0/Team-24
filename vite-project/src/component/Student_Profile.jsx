@@ -132,7 +132,7 @@ const ProfilePage = () => {
             onClick={() => startEdit(field)}
             className="text-gray-400 hover:text-blue-500 transition-colors p-1 rounded-md hover:bg-blue-50"
           >
-            <Edit3 size={16} />
+            <Edit3 size={20} />
           </button>
         )}
       </div>
