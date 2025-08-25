@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { mkdirSync } from 'fs';
 import userRouter from "./routes/userRoutes.js";
 import sequelize from "./config/database.js";
 import Student from "./models/student.js";
@@ -27,48 +28,63 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// API routes
-app.use("/api", userRouter);
 
-// Initial DB sync with force:true in development
-(async () => {
-  try {
-    await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
-    console.log('✅ Database synced successfully');
-    
-    // Create admin user if it doesn't exist
-    const adminExists = await Student.findOne({ where: { role: 'admin' } });
-    if (!adminExists && process.env.NODE_ENV === 'development') {
-      await Student.create({
-        name: 'Admin User',
-        email: 'admin@admin.com',
-        password: 'admin123',
-        batch: 2023,
-        role: 'admin'
-      });
-      console.log('✅ Admin user created');
-    }
-  } catch (error) {
-    console.error('❌ Error syncing database:', error);
-  }
-})();
+// Create uploads directory if it doesn't exist
+try {
+    mkdirSync('./uploads', { recursive: true });
+} catch (err) {
+    console.log('Uploads directory already exists');
+}
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("🚀 App API is running...");
+    res.send("🚀 App API is running...");
 });
 
-const PORT = process.env.PORT || 3000;
+// API routes (mount once)
+app.use('/api', userRouter);
 
-sequelize
-  .sync()
-  .then(() => {
-    console.log("✅ Database connected & synced");
-    app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("❌ Failed to connect DB:", err.message);
-    console.error(err.stack);
-  });
+// Initialize database function
+async function initDb() {
+    try {
+        await sequelize.authenticate();
+        console.log('✅ Database connection successful');
+
+        await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
+        console.log('✅ Database models synchronized');
+
+        const adminExists = await Student.findOne({ where: { role: 'admin' } });
+        if (!adminExists && process.env.NODE_ENV === 'development') {
+            await Student.create({
+                name: 'Admin User',
+                email: 'admin@admin.com',
+                password: 'admin123',
+                batch: 2023,
+                role: 'admin'
+            });
+            console.log('✅ Admin user created');
+        }
+    } catch (error) {
+        console.error('❌ Database initialization error:', error);
+        throw error; // Re-throw to be caught by startApp
+    }
+}
+
+// Start application function
+async function startApp() {
+    const port = process.env.PORT || 3000;
+  
+    try {
+        await initDb();
+        app.listen(port, () => console.log(`\n🚀 Server running on http://localhost:${port}`));
+    } catch (error) {
+        console.error('❌ Application startup failed:', error);
+        process.exit(1);
+    }
+}
+
+// Export for testing
+export { app, startApp };
+
+// Start the application
+startApp();

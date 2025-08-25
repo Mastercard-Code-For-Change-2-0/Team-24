@@ -1,8 +1,8 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js';
+import { Sequelize, DataTypes } from 'sequelize';
+import db from '../config/database.js';
 import bcrypt from 'bcryptjs';
 
-const Student = sequelize.define('Student', {
+const Student = db.define('Student', {
   id: { 
     type: DataTypes.INTEGER, 
     autoIncrement: true, 

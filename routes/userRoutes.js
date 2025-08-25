@@ -1,11 +1,64 @@
 import express from 'express';
+import multer from 'multer';
 import { register, login } from '../controllers/authcontroller.js';
+import { 
+    getProfile, 
+    updateProfile, 
+    bulkCreateStudents, 
+    getAllStudents, 
+    getAllClerks 
+} from '../controllers/userController.js';
 import { verifyToken, requireRoles } from '../middleware/roleAuth.js';
 
 const router = express.Router();
 
-// Public routes for registration
-router.post('/register', register); // Default student registration
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'text/csv') {
+            cb(null, true);
+        } else {
+            cb(new Error('Only CSV files are allowed'));
+        }
+    }
+});
+
+// Public routes for role selection and authentication
+router.get('/roles', (req, res) => {
+    res.json(['student', 'clerk', 'admin']);
+});
+
+// Login routes
+router.post('/login', login); // General login
+router.post('/admin/login', login); // Admin-specific login route
+router.post('/students/login', login); // Student-specific login route
+router.post('/clerk/login', login); // Clerk-specific login route
+
+// Student registration (public route)
+router.post('/students/register', (req, res, next) => {
+    req.body.role = 'student';
+    next();
+}, register);
+
+// Role-specific registration (protected routes)
+router.post('/register/:role', verifyToken, requireRoles(['admin']), (req, res, next) => {
+    const role = req.params.role;
+    if (!['clerk', 'admin'].includes(role)) {
+        return res.status(400).json({ message: "Invalid role" });
+    }
+    req.body.role = role;
+    next();
+}, register);
 
 // Login route
 router.post('/login', login);
