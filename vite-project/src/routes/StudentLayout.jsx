@@ -4,9 +4,11 @@ import Sidebar from "../component/Sidebar";
 
 const StudentLayout = () => {
   return (
-    <div>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
       <Sidebar />
-      <Outlet />
+      <div style={{ flex: 1 }}>
+        <Outlet />
+      </div>
     </div>
   );
 };

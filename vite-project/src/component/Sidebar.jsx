@@ -11,20 +11,21 @@ import {
   Bell,
   LogOut
 } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 
 const Sidebar = ({ className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState('dashboard');
 
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
-    { id: 'home', label: 'Home', icon: <Home size={20} /> },
-    { id: 'profile', label: 'Profile', icon: <User size={20} /> },
-    { id: 'documents', label: 'Documents', icon: <FileText size={20} /> },
-    { id: 'notifications', label: 'Notifications', icon: <Bell size={20} /> },
-    { id: 'settings', label: 'Settings', icon: <Settings size={20} /> },
-  ];
+const navItems = [
+  { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
+  { id: 'home', label: 'Home', icon: <Home size={20} />, path: '/home' },
+  { id: 'profile', label: 'Profile', icon: <User size={20} />, path: '/profile' },
+  { id: 'documents', label: 'Documents', icon: <FileText size={20} />, path: '/documents' },
+  { id: 'notifications', label: 'Notifications', icon: <Bell size={20} />, path: '/notifications' },
+  { id: 'settings', label: 'Settings', icon: <Settings size={20} />, path: '/settings' },
+];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
@@ -74,31 +75,27 @@ const Sidebar = ({ className = "" }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 overflow-y-auto">
-          <ul className="space-y-2">
-            {navItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => setActiveItem(item.id)}
-                  className={`
-                    w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200
-                    ${activeItem === item.id 
-                      ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700' 
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                    }
-                    ${isCollapsed ? 'justify-center' : ''}
-                  `}
-                  title={isCollapsed ? item.label : ''}
-                >
-                  <span className="flex-shrink-0">{item.icon}</span>
-                  {!isCollapsed && (
-                    <span className="font-medium">{item.label}</span>
-                  )}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+
+    <ul className="space-y-2">
+  {navItems.map((item) => (
+    <li key={item.id}>
+      <NavLink
+to={item.id === "dashboard" ? "/student" : `/student${item.path}`}        className={({ isActive }) => `
+          w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200
+          ${isActive 
+            ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700' 
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+          }
+          ${isCollapsed ? 'justify-center' : ''}
+        `}
+        title={isCollapsed ? item.label : ''}
+      >
+        <span className="flex-shrink-0">{item.icon}</span>
+        {!isCollapsed && <span className="font-medium">{item.label}</span>}
+      </NavLink>
+    </li>
+  ))}
+</ul>
 
         {/* Footer */}
         <div className="p-4 border-t flex-shrink-0">
@@ -116,34 +113,7 @@ const Sidebar = ({ className = "" }) => {
         </div>
       </aside>
 
-      {/* Main content area */}
-      <div className={`
-        flex-1 transition-all duration-300 ease-in-out
-        ${isCollapsed ? 'lg:ml-16' : 'lg:ml-64'}
-      `}>
-        <div className="p-8 ml-16 lg:ml-0">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">
-              {navItems.find(item => item.id === activeItem)?.label || 'Dashboard'}
-            </h1>
-            
-            <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600 mb-4">
-                Welcome to the {navItems.find(item => item.id === activeItem)?.label} section.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="h-24 bg-gray-200 rounded-md mb-3"></div>
-                    <h3 className="font-semibold text-gray-900">Content Card {i + 1}</h3>
-                    <p className="text-sm text-gray-600 mt-1">Sample content description</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </>
   );
 };
