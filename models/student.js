@@ -6,17 +6,17 @@ const http = require("http");
 
 
 
-const sequelize = require("./config/database");
+// const sequelize = require("./config/database");
 
 
 
 // Import models directly
 
-require("./models/Student"); // Registers the Student model with Sequelize
+// require("./models/Student"); // Registers the Student model with Sequelize
 
 
 
-const app = express();
+// const app = express();
 
 
 
