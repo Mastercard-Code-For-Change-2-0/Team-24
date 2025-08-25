@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 import { User, Mail, Lock, Phone, Building, GraduationCap, Users, Eye, EyeOff } from 'lucide-react';
 import useLogin from "../hooks/useLogin";
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const RoleBasedSignup = () => {
     const navigate = useNavigate();
@@ -83,20 +83,31 @@ const RoleBasedSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    const result = await login(formData);
-    if(result){
-        alert("Sign in successful");
-        console.log("Success",newUser);
-         setFormData({
+    setIsSubmitting(true);
+    const result = await login(formData.role, formData.email, formData.password);
+    setIsSubmitting(false);
+    if(!result){
+      // alert("Sign in successful");
+      setFormData({
         role:"",
         email: "",
         password: "",
       });
+      // Role-based navigation
+      if(formData.role === "admin") {
+        navigate("/admin/profile");
+      } else if(formData.role === "student") {
+        navigate("/student/profile");
+      } else if(formData.role === "clerk") {
+        navigate("/clerk/dashboard");
+      } else {
+        navigate("/");
+      }
     }
     else{
-        console.log(error);
+      alert(error || "Login failed");
+      console.log(error);
     }
   };
 
@@ -203,7 +214,7 @@ const RoleBasedSignup = () => {
           </button>
 
           <p className="text-center text-sm text-gray-600 mt-6">
-            Already have an account?{' '}
+           Don't have an account?{' '}
             <a onClick={()=>{navigate('/login/'+formData.role)}} className="text-blue-600 hover:text-blue-700 font-medium">
               Sign in here
             </a>

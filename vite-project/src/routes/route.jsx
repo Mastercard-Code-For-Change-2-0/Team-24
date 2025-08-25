@@ -36,6 +36,13 @@ const router = createBrowserRouter([
                 {path:"bulk",element:<Admin_Bulk/>},
 
         ]    
+    },
+    {
+        path:"/clerk",
+        children:[
+                {path:"dashboard",element:<Admin_Bulk/>},
+
+        ]    
     }
 ])
 export default router;

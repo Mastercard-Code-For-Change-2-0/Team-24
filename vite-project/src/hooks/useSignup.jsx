@@ -10,7 +10,6 @@ export default function useSignup(baseURL = "http://localhost:3000/api") {
   const signup = async (formData) => {
     setLoading(true);
     setError(null);
-
     try {
       const res = await axios.post(`${baseURL}/students/register`, {
         name :formData.name,
@@ -19,10 +18,6 @@ export default function useSignup(baseURL = "http://localhost:3000/api") {
  password : formData.password,
  phone :formData.phone,
  batch :formData.batch,
-      email :formData.email,
-      password : formData.password,
-      name : formData.name,
-      batch: formData.batch,
       });
       
       // If backend returns token, store it

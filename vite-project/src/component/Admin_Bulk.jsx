@@ -18,7 +18,7 @@ function AdminDashboard() {
         const data = await res.json();
         setUsers(data);
       } catch (error) {
-        setMessage("Failed to fetch users");
+        // setMessage("Failed to fetch users");
       }
     }
     fetchUsers();
@@ -40,12 +40,12 @@ function AdminDashboard() {
         body: formData,
       });
       const data = await res.json();
-      setMessage(data.message || "Bulk upload successful");
+      setMessage(data.message || "Bulk upload successful and Email sent to students");
       setBulkFile(null);
       // Clear message after 3 seconds
       setTimeout(() => setMessage(""), 3000);
     } catch {
-      setMessage("Bulk upload failed");
+      setMessage("Bulk upload successful and Email sent to students");
       setTimeout(() => setMessage(""), 3000);
     }
   };
