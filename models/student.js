@@ -38,6 +38,22 @@ const Student = sequelize.define('Student', {
       max: new Date().getFullYear() + 1, // Allowing next year's batch
     },
   },
+  tp_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: TrainingPartner,
+      key: 'tp_id'
+    }
+  },
+  contact_info: {
+    allowNull: true,
+    type: DataTypes.STRING(13),
+    unique: true
+  },
+
+
+
 },{
    tableName :'Student'
    ,timestamps: true

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import {z} from "zod";
 import jwt from 'jsonwebtoken';
+import {Students} from "../models/student.js";
 import Students from "../models/student.js";
 import dotenv from 'dotenv';
 
@@ -90,3 +91,23 @@ export const login = async (req, res) => {
         res.status(500).json({message: "Internal Server error"});
     }
 };
+
+
+exports.register = async(req,res) =>{
+    try{
+        const{username,email,password} = req.body;
+        const hashedPassword = await bcrypt.hash(password);
+        const newstudent= await Students.create({
+            username,
+            email,
+            password: hashedPassword
+            
+        });
+        res.status(201).json({message:" registered successfully"});
+    
+    }
+    catch(error){
+        console.error("Error registering:",error);
+        res.status(500).json({message:"Internal server error"});
+    }
+}
