@@ -1,0 +1,124 @@
+import React, { useState } from 'react';
+import { 
+  Home, 
+  User, 
+  Settings, 
+  Menu, 
+  X, 
+  ChevronLeft,
+  LayoutDashboard,
+  FileText,
+  Bell,
+  LogOut
+} from 'lucide-react';
+
+const Sidebar = ({ className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activeItem, setActiveItem] = useState('dashboard');
+
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
+    { id: 'home', label: 'Home', icon: <Home size={20} /> },
+    { id: 'profile', label: 'Profile', icon: <User size={20} /> },
+    { id: 'documents', label: 'Documents', icon: <FileText size={20} /> },
+    { id: 'notifications', label: 'Notifications', icon: <Bell size={20} /> },
+    { id: 'settings', label: 'Settings', icon: <Settings size={20} /> },
+  ];
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
+  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
+
+  return (
+    <>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Mobile menu button */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 z-50 lg:hidden bg-white rounded-md p-2 shadow-lg"
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Sidebar */}
+      <aside
+        className={`
+          fixed top-0 left-0 h-full bg-white shadow-lg z-50 transition-all duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          ${isCollapsed ? 'w-16' : 'w-64'}
+          lg:translate-x-0 lg:static lg:z-auto
+          ${className}
+        `}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b">
+          {!isCollapsed && (
+            <h2 className="text-xl font-bold text-gray-800">Dashboard</h2>
+          )}
+          <button
+            onClick={toggleCollapse}
+            className="hidden lg:block p-1 rounded-md hover:bg-gray-100 transition-colors"
+          >
+            <ChevronLeft 
+              size={20} 
+              className={`transform transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
+            />
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            {navItems.map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={() => setActiveItem(item.id)}
+                  className={`
+                    w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200
+                    ${activeItem === item.id 
+                      ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700' 
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }
+                    ${isCollapsed ? 'justify-center' : ''}
+                  `}
+                  title={isCollapsed ? item.label : ''}
+                >
+                  <span className="flex-shrink-0">{item.icon}</span>
+                  {!isCollapsed && (
+                    <span className="font-medium">{item.label}</span>
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Footer */}
+        <div className="p-4 border-t">
+          <button
+            className={`
+              w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
+              text-red-600 hover:bg-red-50 hover:text-red-700
+              ${isCollapsed ? 'justify-center' : ''}
+            `}
+            title={isCollapsed ? 'Logout' : ''}
+          >
+            <LogOut size={20} />
+            {!isCollapsed && <span className="font-medium">Logout</span>}
+          </button>
+        </div>
+      </aside>
+
+      
+    </>
+  );
+};
+
+export default Sidebar;

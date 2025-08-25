@@ -2,8 +2,8 @@ import {createBrowserRouter} from "react-router-dom";
 import RoleBasedSignup from "../component/Signup";
 import LoginPage from "../component/Login";
 import LoginAdmin from "../component/Login-admin";
-import Student from "../component/Student";
-
+// import Student from "../component/Student";
+import StudentLayout from "./StudentLayout";
 const router = createBrowserRouter([
     {
         path : '/',element:<RoleBasedSignup/>
@@ -16,8 +16,10 @@ const router = createBrowserRouter([
         ]
     },
     {
-        path:"/student",
-        element:<Student/>
+        path:"/student",element: <StudentLayout />,
+        // children:[
+        //     {index:true,element:<Student/>}
+        // ]   
     }
 ])
 export default router;
