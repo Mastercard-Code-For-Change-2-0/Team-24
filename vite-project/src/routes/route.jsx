@@ -15,7 +15,8 @@ const router = createBrowserRouter([
         path : '/login',
         children:[
             {path :'student',element:<LoginPage/>},
-            {path:"admin",element:<LoginAdmin/>}
+            {path:"admin",element:<LoginAdmin/>},
+            {path:"", element:<LoginPage/>}
         ]
     },
     {

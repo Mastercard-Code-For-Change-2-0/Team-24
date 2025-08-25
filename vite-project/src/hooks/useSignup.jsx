@@ -2,7 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function useSignup(baseURL = "http://localhost:5000/api") {
+export default function useSignup(baseURL = "http://localhost:3000/api") {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [newUser, setNewUser] = useState(null);
@@ -12,7 +12,7 @@ export default function useSignup(baseURL = "http://localhost:5000/api") {
     setError(null);
 
     try {
-      const res = await axios.post(`${baseURL}/register`, {
+      const res = await axios.post(`${baseURL}/students/register`, {
         name :formData.name,
 
  email :formData.email,

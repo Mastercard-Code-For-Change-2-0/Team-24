@@ -1,11 +1,11 @@
 import React, { useState} from 'react';
 import { User, Mail, Lock, Phone, Building, GraduationCap, Users, Eye, EyeOff } from 'lucide-react';
-import useSignup from '../hooks/useSignup';
+import useLogin from "../hooks/useLogin";
 import { useNavigate } from 'react-router-dom';
 
 const RoleBasedSignup = () => {
     const navigate = useNavigate();
-    const {signup,loading,newUser,error} = useSignup();
+    const {login,loading,newUser,error} = useLogin();
   const [formData, setFormData] = useState({
     role:'',
     email: '',
@@ -65,7 +65,7 @@ const RoleBasedSignup = () => {
     const newErrors = {};
 
     // Basic validation
-    if (!formData.name.trim()) newErrors.name = 'First name is required';
+    // if (!formData.name.trim()) newErrors.name = 'First name is required';
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 5) {
@@ -85,7 +85,7 @@ const RoleBasedSignup = () => {
     e.preventDefault();
     
     if (!validateForm()) return;
-    const result = await signup(formData);
+    const result = await login(formData);
     if(result){
         alert("Sign in successful");
         console.log("Success",newUser);
