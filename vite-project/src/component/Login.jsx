@@ -1,0 +1,228 @@
+import React, { useState} from 'react';
+import { User, Mail, Lock, Phone, Building, GraduationCap, Users, Eye, EyeOff } from 'lucide-react';
+import useLogin from "../hooks/useLogin";
+import { NavLink, useNavigate } from 'react-router-dom';
+
+const RoleBasedSignup = () => {
+    const navigate = useNavigate();
+    const {login,loading,newUser,error} = useLogin();
+  const [formData, setFormData] = useState({
+    role:'',
+    email: '',
+    password: '',
+  });
+
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const roles = [
+    {
+      id: 'student',
+      name: 'Student',
+    },
+    {
+      id: 'admin',
+      name: 'Admin',
+    },
+    {
+      id: 'clerk',
+      name: 'Clerk',
+      },
+  ];
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const handleRoleSelect = (roleId) => {
+    setFormData(prev => ({
+      ...prev,
+      role: roleId,      
+    }));
+    // Clear role error
+    if (errors.role) {
+      setErrors(prev => ({
+        ...prev,
+        role: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Basic validation
+    // if (!formData.name.trim()) newErrors.name = 'First name is required';
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 5) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+    if (!formData.role) {
+      newErrors.role = 'Please select a role';
+    }
+
+    // Role-specific validation
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    setIsSubmitting(true);
+    const result = await login(formData.role, formData.email, formData.password);
+    setIsSubmitting(false);
+    if(!result){
+      // alert("Sign in successful");
+      setFormData({
+        role:"",
+        email: "",
+        password: "",
+      });
+      // Role-based navigation
+      if(formData.role === "admin") {
+        navigate("/admin/profile");
+      } else if(formData.role === "student") {
+        navigate("/student/profile");
+      } else if(formData.role === "clerk") {
+        navigate("/clerk/dashboard");
+      } else {
+        navigate("/");
+      }
+    }
+    else{
+      alert(error || "Login failed");
+      console.log(error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white text-center">
+          <h1 className="text-3xl font-bold mb-2">Login to Your Account</h1>
+          <p className="text-blue-100">Impactful stories, one step at a time</p>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="p-8">
+          {/* Role Selection */}
+          <div className="mb-8">
+            <label className="block text-sm font-medium text-gray-700 mb-4">
+              Select Your Role *
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {roles.map((role) => {
+                // const IconComponent = role.icon;
+                return (
+                  <button
+                    key={role.id}
+                    type="button"
+                    onClick={() => handleRoleSelect(role.id)}
+                    className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                      formData.role === role.id
+                        ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-500 ring-opacity-20'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    {/* <IconComponent className={`w-8 h-8 mx-auto mb-2 ${
+                      formData.role === role.id ? 'text-blue-600' : 'text-gray-400'
+                    }`} /> */}
+                    <h3 className={`font-semibold ${
+                      formData.role === role.id ? 'text-blue-900' : 'text-gray-900'
+                    }`}>
+                      {role.name}
+                    </h3>
+                    {/* <p className="text-sm text-gray-600 mt-1">{role.description}</p> */}
+                  </button>
+                );
+              })}
+            </div>
+            {errors.role && <p className="text-red-500 text-sm mt-2">{errors.role}</p>}
+          </div>
+
+          {/* Basic Information */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address *
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Enter your email address"
+              />
+            </div>
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password *
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Enter password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Logging into Account...' : 'Log Into Account'}
+          </button>
+
+          <p className="text-center text-sm text-gray-600 mt-6">
+           Don't have an account?{' '}
+            <a onClick={()=>{navigate('/login/'+formData.role)}} className="text-blue-600 hover:text-blue-700 font-medium">
+              Sign in here
+            </a>
+          </p>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default RoleBasedSignup;
