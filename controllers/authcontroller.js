@@ -21,7 +21,7 @@ function sign(user) {
 }
 
 const registerSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   name: z.string().min(1, "Name is required"),
   batch: z.number().int().min(2000).max(new Date().getFullYear() + 1),
   password: z.string().min(6, "Password must be at least 6 characters long")
