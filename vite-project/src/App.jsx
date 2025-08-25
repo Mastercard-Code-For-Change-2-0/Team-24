@@ -1,17 +1,11 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import LoginPage from './component/Login'
+import RoleBasedSignup from './component/Signup'
+import { RouterProvider } from 'react-router-dom'
+import router from './routes/route'
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
-    </>
+    <RouterProvider router={router}></RouterProvider>
   )
 }
 
