@@ -1,15 +1,20 @@
 
-require("dotenv").config();
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
+import dotenv from "dotenv";
+// const express = require("express");
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+// const cookieParser = require("cookie-parser");
+// const cors = require("cors");
+import { studentauthRouter } from "./routes/studentroutes.js";
 
-
-const sequelize = require("./config/database.js");
-const Student = require("./models/student");  // now works because we will create models/index.js
+// const sequelize = require("./config/database.js");
+import sequelize from "./config/database.js";
+// const Student = require("./models/student");
+import Student from "./models/student.js";  // now works because we will create models/index.js
 
 const app = express();
-
+dotenv.config();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
@@ -28,9 +33,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// HTTP server
-
+app.use("/api/students", studentauthRouter);
 
 // Initial DB sync
 (async () => {
@@ -48,10 +51,11 @@ sequelize
   .sync()
   .then(() => {
     console.log("✅ Database connected & synced");
-    server.listen(PORT, () => {
-      console.log("Server running at http://localhost:${PORT}");
+    app.listen(PORT, () => {
+      console.log(`Server running at http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.error("❌ Failed to connect DB:", err);
+    console.error("❌ Failed to connect DB:", err.message);
+    console.error(err.stack);
   });
