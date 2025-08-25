@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import {z} from "zod";
 import jwt from 'jsonwebtoken';
-import {Users} from "../models/student.js";
+import {Students} from "../models/student.js";
 
 const loginSchema = z.object({
     email: z.email(),
@@ -11,7 +11,7 @@ const loginSchema = z.object({
 export const login = async (req, res) => {
     try {
         const {email, password} = loginSchema.parse(req.body);
-        const user = await Users.findByEmail(email);
+        const user = await Students.findByEmail(email);
         if (!user) return res.status(400).json({message: "User with this email is not present."});
         
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -23,3 +23,23 @@ export const login = async (req, res) => {
         res.status(500).json({message: "Internal Server error."});
     }
 };
+
+
+exports.register = async(req,res) =>{
+    try{
+        const{username,email,password} = req.body;
+        const hashedPassword = await bcrypt.hash(password);
+        const newstudent= await Students.create({
+            username,
+            email,
+            password: hashedPassword
+            
+        });
+        res.status(201).json({message:" registered successfully"});
+    
+    }
+    catch(error){
+        console.error("Error registering:",error);
+        res.status(500).json({message:"Internal server error"});
+    }
+}
