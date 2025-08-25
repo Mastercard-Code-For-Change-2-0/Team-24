@@ -19,6 +19,10 @@ export default function useSignup(baseURL = "http://localhost:5000/api") {
  password : formData.password,
  phone :formData.phone,
  batch :formData.batch,
+      email :formData.email,
+      password : formData.password,
+      name : formData.name,
+      batch: formData.batch,
       });
       
       // If backend returns token, store it
