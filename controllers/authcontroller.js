@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import {z} from "zod";
 import jwt from 'jsonwebtoken';
-import {Users} from "../models/student.js";
+import {} from "../models/student.js";
 
 const loginSchema = z.object({
     email: z.email(),
@@ -11,7 +11,7 @@ const loginSchema = z.object({
 export const login = async (req, res) => {
     try {
         const {email, password} = loginSchema.parse(req.body);
-        const user = await Users.findByEmail(email);
+        const user = await Students.findByEmail(email);
         if (!user) return res.status(400).json({message: "User with this email is not present."});
         
         const isPasswordValid = await bcrypt.compare(password, user.password);
