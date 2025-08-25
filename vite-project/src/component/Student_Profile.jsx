@@ -77,6 +77,7 @@ const ProfilePage = () => {
   };
 
   const addEducation = () => {
+    
     const degree = prompt("Enter degree/qualification:");
     const institution = prompt("Enter institution:");
     const year = prompt("Enter year:");
