@@ -10,7 +10,8 @@ import {
   FileText,
   Bell,
   LogOut,
-  BarChart3
+  BarChart3,
+  Heart
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
@@ -24,6 +25,7 @@ const navItems = [
   { id: 'home', label: 'Home', icon: <Home size={20} />, path: '/home' },
   { id: 'profile', label: 'Profile', icon: <User size={20} />, path: '/profile' },
   { id: 'analytics', label: 'Analytics', icon: <BarChart3 size={20} />, path: '/analytics' },
+  { id: 'impact', label: 'Impact Stories', icon: <Heart size={20} />, path: '/impact' },
   { id: 'documents', label: 'Documents', icon: <FileText size={20} />, path: '/documents' },
   { id: 'notifications', label: 'Notifications', icon: <Bell size={20} />, path: '/notifications' },
   { id: 'settings', label: 'Settings', icon: <Settings size={20} />, path: '/settings' },
@@ -82,15 +84,17 @@ const navItems = [
   {navItems.map((item) => (
     <li key={item.id}>
       <NavLink
-to={item.id === "dashboard" ? "/student" : `/student${item.path}`}        className={({ isActive }) => `
+        to={item.id === "dashboard" ? "/student" : `/student${item.path}`}
+        className={({ isActive }) => `
           w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200
-          ${isActive 
-            ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700' 
+          ${isActive
+            ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700'
             : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
           }
           ${isCollapsed ? 'justify-center' : ''}
         `}
         title={isCollapsed ? item.label : ''}
+        end={item.id === "dashboard"}
       >
         <span className="flex-shrink-0">{item.icon}</span>
         {!isCollapsed && <span className="font-medium">{item.label}</span>}

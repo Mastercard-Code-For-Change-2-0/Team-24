@@ -6,6 +6,12 @@ import LoginAdmin from "../component/Login-admin";
 import StudentLayout from "./StudentLayout";
 import Student_Profile from "../component/Student_Profile";
 import Student_Analytics from "../component/Student_Analytics";
+import Student_Documents from "../component/Student_Documents";
+import Student_Dashboard from "../component/Student_Dashboard";
+import Student_Settings from "../component/Student_Settings";
+import Student_Notifications from "../component/Student_Notifications";
+import Homepage from "../component/Homepage";
+import Impact_Stories from "../component/Impact_Stories";
 const router = createBrowserRouter([
     {
         path : '/',element:<RoleBasedSignup/>
@@ -20,12 +26,14 @@ const router = createBrowserRouter([
     {
         path:"/student",element: <StudentLayout />,
         children:[
-                { path: "home", element: <div>Student Home</div> },
+                { path: "", element: <Student_Dashboard/> },
+                { path: "home", element: <Homepage/> },
                 { path: "profile", element: <Student_Profile/> },
                 { path: "analytics", element: <Student_Analytics/> },
-                { path: "documents", element: <div>Documents</div> },
-                { path: "notifications", element: <div>Notifications</div> },
-                { path: "settings", element: <div>Settings</div> },
+                { path: "impact", element: <Impact_Stories/> },
+                { path: "documents", element: <Student_Documents/> },
+                { path: "notifications", element: <Student_Notifications/> },
+                { path: "settings", element: <Student_Settings/> },
         ]
     }
 ])
