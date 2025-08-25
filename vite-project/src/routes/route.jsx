@@ -4,6 +4,8 @@ import LoginPage from "../component/Login";
 import LoginAdmin from "../component/Login-admin";
 // import Student from "../component/Student";
 import StudentLayout from "./StudentLayout";
+import Student_Profile from "../component/Student_Profile"; 
+import AdminDashboard from "../component/AdminDashboard";
 const router = createBrowserRouter([
     {
         path : '/',element:<RoleBasedSignup/>
@@ -12,14 +14,24 @@ const router = createBrowserRouter([
         path : '/login',
         children:[
             {path :'student',element:<LoginPage/>},
-            {path:"professional",element:<LoginAdmin/>}
+            {path:"admin",element:<LoginAdmin/>}
         ]
     },
     {
         path:"/student",element: <StudentLayout />,
-        // children:[
-        //     {index:true,element:<Student/>}
-        // ]   
+        children:[
+                { path: "home", element: <div>Student Home</div> },
+                { path: "profile", element: <Student_Profile/> },
+                { path: "documents", element: <div>Documents</div> },
+                { path: "notifications", element: <div>Notifications</div> },
+                { path: "settings", element: <div>Settings</div> },
+        ]   
+    },
+    {
+        path:"/admin",
+        children:[
+                { path: "dash", element: <AdminDashboard/>}
+        ]    
     }
 ])
 export default router;
