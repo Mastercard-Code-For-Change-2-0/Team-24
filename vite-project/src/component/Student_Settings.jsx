@@ -7,10 +7,10 @@ import { Settings, User, Shield, Mail, Sun, Moon, Globe, Linkedin, Github } from
  */
 const Student_Settings = () => {
   const [profileForm, setProfileForm] = useState({
-    name: 'Priya Sharma',
-    email: 'priya.s@y4d.org',
+    name: 'Rohan Mehta',
+    email: 'rohan.mehta@example.com',
     phone: '+91-9876543210',
-    address: 'Bengaluru, Karnataka'
+    address: 'Pune, Maharashtra'
   });
   const [privacySettings, setPrivacySettings] = useState({
     twoFactor: false,
@@ -40,7 +40,7 @@ const Student_Settings = () => {
             <h4 className="font-semibold text-lg">Profile Information</h4>
             <div className="flex items-center space-x-4">
               <img
-                src="https://placehold.co/128x128/e5e7eb/4b5563?text=PS"
+                src="https://placehold.co/128x128/e5e7eb/4b5563?text=RM"
                 alt="Profile"
                 className="w-16 h-16 rounded-full border-2 border-gray-300"
               />

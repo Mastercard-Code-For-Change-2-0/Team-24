@@ -23,15 +23,15 @@ const ProfilePage = () => {
   // Initial profile data based on the API response
   const [profile, setProfile] = useState({
     id: 1,
-    name: "ast",
-    email: "a@g.com",
+    name: "Rohan Mehta",
+    email: "rohan.mehta@example.com",
     batch: 2023,
     role: "student",
-    contact: "",
-    address: "",
+    contact: "+91-9876543210",
+    address: "456 FC Road, Pune, Maharashtra - 411016",
     profile_picture: null,
-    skills: [],
-    education: [],
+    skills: ["JavaScript", "React", "Node.js", "Python", "MongoDB"],
+    education: ["B.Tech Computer Science - Pune Institute of Technology (2020)"],
     createdAt: "2025-08-25T08:03:11.823Z",
     updatedAt: "2025-08-25T08:03:11.823Z"
   });
