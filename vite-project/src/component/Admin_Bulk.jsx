@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UploadCloud, CheckCircle, AlertCircle } from "lucide-react";
 
-function AdminDashboard() {
+function Admin_Bulk() {
   const [users, setUsers] = useState([]);
   // Removed clerkForm state
   const [bulkFile, setBulkFile] = useState(null);
@@ -101,4 +101,4 @@ function AdminDashboard() {
   );
 }
 
-export default AdminDashboard;
+export default Admin_Bulk;
